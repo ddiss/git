@@ -282,6 +282,7 @@ static int parse_msg_arg(const struct option *opt, const char *arg, int unset)
 	ALLOC_GROW_BY(d->messages, d->msg_nr, 1, d->msg_alloc);
 	d->messages[d->msg_nr - 1] = msg;
 	msg->stripspace = STRIPSPACE;
+	d->given = 1;
 	return 0;
 }
 
@@ -302,6 +303,7 @@ static int parse_file_arg(const struct option *opt, const char *arg, int unset)
 	ALLOC_GROW_BY(d->messages, d->msg_nr, 1, d->msg_alloc);
 	d->messages[d->msg_nr - 1] = msg;
 	msg->stripspace = STRIPSPACE;
+	d->given = 1;
 	return 0;
 }
 
@@ -335,6 +337,7 @@ static int parse_reuse_arg(const struct option *opt, const char *arg, int unset)
 	ALLOC_GROW_BY(d->messages, d->msg_nr, 1, d->msg_alloc);
 	d->messages[d->msg_nr - 1] = msg;
 	msg->stripspace = NO_STRIPSPACE;
+	d->given = 1;
 	return 0;
 }
 
@@ -515,7 +518,6 @@ static int add(int argc, const char **argv, const char *prefix)
 
 	if (d.msg_nr)
 		concat_messages(&d);
-	d.given = !!d.buf.len;
 
 	object_ref = argc > 1 ? argv[1] : "HEAD";
 
@@ -692,7 +694,6 @@ static int append_edit(int argc, const char **argv, const char *prefix)
 
 	if (d.msg_nr)
 		concat_messages(&d);
-	d.given = !!d.buf.len;
 
 	if (d.given && edit)
 		fprintf(stderr, _("The -m/-F/-c/-C options have been deprecated "
